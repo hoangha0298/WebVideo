@@ -1,5 +1,7 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Model.DTO.FolderDTO;
+import com.example.demo.Model.DTO.ResponseDTO;
 import com.example.demo.Model.VideoRange;
 import com.example.demo.Service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +14,18 @@ import org.springframework.web.bind.annotation.*;
 import java.io.*;
 
 @RestController()
-@RequestMapping("/stream_video")
+@RequestMapping("/video_service")
 public class VideoStreamController {
 
     @Autowired
     private VideoService videoService;
 
-    @GetMapping("/video/{name}")
+    @GetMapping("/video/{path_relative}")
     public ResponseEntity<InputStreamResource> getVideo(
-            @PathVariable("name") String nameVideo,
+            @PathVariable("path_relative") String pathRelative,
             @RequestHeader(value = "range", required = false) String range
     ) throws IOException {
-        VideoRange videoRange = videoService.getInformationVideoByNameAndRange(nameVideo, range);
-        InputStream videoResult = videoService.getInputStreamVideo(videoRange);
+        VideoRange videoRange = videoService.getVideoRange(pathRelative, range);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("content-type", "video/mp4");
@@ -33,10 +34,15 @@ public class VideoStreamController {
 
         if (range != null) {
             headers.set("content-range", String.format("bytes %s-%s/%s", videoRange.getRangeBegin(), videoRange.getRangeEnd(), videoRange.getLengthTotalVideo()));
-            return new ResponseEntity<>(new InputStreamResource(videoResult), headers, HttpStatus.PARTIAL_CONTENT);
+            return new ResponseEntity<>(new InputStreamResource(videoRange.getRangeStream()), headers, HttpStatus.PARTIAL_CONTENT);
         } else {
-            return new ResponseEntity<>(new InputStreamResource(videoResult), headers, HttpStatus.OK);
+            return new ResponseEntity<>(new InputStreamResource(videoRange.getRangeStream()), headers, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/tree_video")
+    public ResponseDTO<FolderDTO> getTreeFolderVideo() {
+        return new ResponseDTO<>().setData(videoService.getTreeFolderVideo()).setMessage("Danh sách thư mục con cháu (bao gồm video) trong thư mục gốc");
     }
 
 }

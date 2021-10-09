@@ -1,25 +1,24 @@
 package com.example.demo.Service;
 
+import com.example.demo.Model.DTO.FolderDTO;
 import com.example.demo.Model.VideoRange;
-import com.example.demo.Repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 @Service
 public class VideoService {
 
-    @Autowired
-    private VideoRepository videoRepository;
-
-    public InputStream getInputStreamVideo(VideoRange videoRange) throws IOException {
-        return videoRepository.getInputStreamVideo(videoRange);
+    public VideoRange getVideoRange(String pathRelative, String headerRange) throws IOException {
+        return VideoRange.getInstance(pathRelative, headerRange);
     }
 
-    public VideoRange getInformationVideoByNameAndRange(String name, String range) {
-        return VideoRange.getInstance(name, range);
+    public FolderDTO getTreeFolderVideo() {
+        File folderRootVideo = new File(FileService.PATH_ROOT_VIDEO);
+        return FolderDTO.getFolderRoot(folderRootVideo);
     }
 
 }

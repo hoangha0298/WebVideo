@@ -1,6 +1,5 @@
-package com.example.demo.Model;
+package com.example.demo.Model.DTO;
 
-import com.example.demo.Repository.VideoRepository;
 import lombok.Getter;
 
 import java.io.File;
@@ -10,8 +9,7 @@ import java.util.ArrayList;
 public class FolderDTO {
 
     private final static String[] TYPES_OF_VIDEO = {"mp4"};
-
-    private static VideoRepository videoRepository = new VideoRepository();
+    private static File folderRoot = null;
 
     private ArrayList<VideoDTO> videos;
     private ArrayList<FolderDTO> subFolders;
@@ -35,15 +33,18 @@ public class FolderDTO {
         return this;
     }
 
-    public static FolderDTO getFolderRoot() {
-        File root = new File(VideoRepository.PATH_ROOT_VIDEO);
-        return getFolderAndAllContent(root);
+    // trả về tree folder k chứa folder truyền vào
+    public static FolderDTO getFolderRoot(File folderRoot2) {
+        folderRoot = new File(folderRoot2.getPath());
+        return getFolderAndAllContent(folderRoot);
     }
 
     private static String getPathRelative(String pathAbsolute) {
-        return pathAbsolute.replace(VideoRepository.PATH_ROOT_VIDEO, "");
+        String pathRelative = pathAbsolute.replace(folderRoot.getPath(), "");
+        return pathRelative.length() > 2 ? pathRelative.substring(1) : null;
     }
 
+    // trả về tất cả video trong thư mục có type khớp type truyền vào
     private static ArrayList<VideoDTO> getVideoFromFolder(File folder, String[] types) {
         ArrayList<VideoDTO> videos = new ArrayList<>();
         for (File file : folder.listFiles()) {
@@ -66,7 +67,7 @@ public class FolderDTO {
         return videos;
     }
 
-    // trả về folder chứa video và tất cả folder con cháu trong đó
+    // trả về tree folder chứa video và tất cả folder con cháu trong đó (k tính folder truyền vào)
     private static FolderDTO getFolderAndAllContent(File folder) {
         ArrayList<VideoDTO> videos = getVideoFromFolder(folder, TYPES_OF_VIDEO);
         ArrayList<FolderDTO> subFolders = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.example.demo;
 
-import com.example.demo.Model.FolderDTO;
+import com.example.demo.Model.DTO.FolderDTO;
+import com.example.demo.Service.FileService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -18,8 +19,8 @@ public class Test {
 //            System.out.println("Directory " + file.isDirectory());
 //            System.out.println("File " + file.isFile());
 //        }
-        FolderDTO root = FolderDTO.getFolderRoot();
-        System.out.println(root);
+        File folderRoot = new File(FileService.PATH_ROOT_VIDEO);
+        FolderDTO root = FolderDTO.getFolderRoot(folderRoot);
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(root);
         System.out.println(json);
