@@ -4,7 +4,7 @@ import com.example.demo.Repository.VideoRepository;
 import lombok.Data;
 
 @Data
-public class Video {
+public class VideoRange {
 
     private static VideoRepository videoRepository;
     static {
@@ -16,7 +16,7 @@ public class Video {
     private Long rangeEnd;
     private Long lengthTotalVideo;
 
-    private Video(String name, Long rangeBegin, Long rangeEnd, Long lengthTotalVideo) {
+    private VideoRange(String name, Long rangeBegin, Long rangeEnd, Long lengthTotalVideo) {
         this.name = name;
         this.rangeBegin = rangeBegin;
         this.rangeEnd = rangeEnd;
@@ -28,7 +28,7 @@ public class Video {
     }
 
     // tính toán rangeBegin, rangeEnd, độ dài toàn video
-    public static Video getInstance(String name, String headerRange) {
+    public static VideoRange getInstance(String name, String headerRange) {
         Long rangeBegin = 0l;
         Long rangeEnd = videoRepository.getLengthVideo(name) - 1;
 
@@ -40,7 +40,7 @@ public class Video {
             }
         }
 
-        return new Video(name, rangeBegin, rangeEnd, videoRepository.getLengthVideo(name));
+        return new VideoRange(name, rangeBegin, rangeEnd, videoRepository.getLengthVideo(name));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Model.Video;
+import com.example.demo.Model.VideoRange;
 import com.example.demo.Service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -23,16 +23,16 @@ public class VideoStreamController {
             @PathVariable("name") String nameVideo,
             @RequestHeader(value = "range", required = false) String range
     ) throws IOException {
-        Video video = videoService.getInformationVideoByNameAndRange(nameVideo, range);
-        InputStream videoResult = videoService.getInputStreamVideo(video);
+        VideoRange videoRange = videoService.getInformationVideoByNameAndRange(nameVideo, range);
+        InputStream videoResult = videoService.getInputStreamVideo(videoRange);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("content-type", "video/mp4");
         headers.set("connection", "keep-alive");
-        headers.set("content-length", String.valueOf(video.lengthRange()));
+        headers.set("content-length", String.valueOf(videoRange.lengthRange()));
 
         if (range != null) {
-            headers.set("content-range", String.format("bytes %s-%s/%s", video.getRangeBegin(), video.getRangeEnd(), video.getLengthTotalVideo()));
+            headers.set("content-range", String.format("bytes %s-%s/%s", videoRange.getRangeBegin(), videoRange.getRangeEnd(), videoRange.getLengthTotalVideo()));
             return new ResponseEntity<>(new InputStreamResource(videoResult), headers, HttpStatus.PARTIAL_CONTENT);
         } else {
             return new ResponseEntity<>(new InputStreamResource(videoResult), headers, HttpStatus.OK);

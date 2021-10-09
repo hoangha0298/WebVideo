@@ -1,6 +1,6 @@
 package com.example.demo.Repository;
 
-import com.example.demo.Model.Video;
+import com.example.demo.Model.VideoRange;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -8,15 +8,15 @@ import java.io.*;
 @Repository
 public class VideoRepository {
 
-    public final static String pathRootVideo = "C:\\Users\\Admin\\Desktop\\video\\";
+    public final static String PATH_ROOT_VIDEO = "C:\\Users\\Admin\\Desktop\\video\\";
 
-    public InputStream getInputStreamVideo(Video video) throws IOException {
-        String path = pathRootVideo + video.getName();
+    public InputStream getInputStreamVideo(VideoRange videoRange) throws IOException {
+        String path = PATH_ROOT_VIDEO + videoRange.getName();
         File videoFile = new File(path);
         FileInputStream videoInputStream = new FileInputStream(videoFile);
-        byte[] arrayVideo = new byte[(int) video.lengthRange()];
+        byte[] arrayVideo = new byte[(int) videoRange.lengthRange()];
 
-        videoInputStream.skip(video.getRangeBegin());
+        videoInputStream.skip(videoRange.getRangeBegin());
         videoInputStream.read(arrayVideo);
 
         return new ByteArrayInputStream(arrayVideo);
@@ -24,7 +24,7 @@ public class VideoRepository {
 
     // trả về độ dài là byte
     public Long getLengthVideo(String name) {
-        String path = pathRootVideo + name;
+        String path = PATH_ROOT_VIDEO + name;
         File video = new File(path);
         return video.length();
     }
