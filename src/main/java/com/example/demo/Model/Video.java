@@ -16,7 +16,7 @@ public class Video {
     private Long rangeEnd;
     private Long lengthTotalVideo;
 
-    public Video(String name, Long rangeBegin, Long rangeEnd, Long lengthTotalVideo) {
+    private Video(String name, Long rangeBegin, Long rangeEnd, Long lengthTotalVideo) {
         this.name = name;
         this.rangeBegin = rangeBegin;
         this.rangeEnd = rangeEnd;
@@ -27,6 +27,7 @@ public class Video {
         return rangeEnd - rangeBegin + 1;
     }
 
+    // tính toán rangeBegin, rangeEnd, độ dài toàn video
     public static Video getInstance(String name, String headerRange) {
         Long rangeBegin = 0l;
         Long rangeEnd = videoRepository.getLengthVideo(name) - 1;

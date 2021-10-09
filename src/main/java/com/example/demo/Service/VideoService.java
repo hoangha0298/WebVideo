@@ -18,4 +18,8 @@ public class VideoService {
         return videoRepository.getInputStreamVideo(video);
     }
 
+    public Video getInformationVideoByNameAndRange(String name, String range) {
+        return Video.getInstance(name, range);
+    }
+
 }
