@@ -2,7 +2,6 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.DTO.FolderDTO;
 import com.example.demo.Model.DTO.ResponseDTO;
-import com.example.demo.Model.VideoRange;
 import com.example.demo.Service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -25,7 +24,7 @@ public class VideoStreamController {
             @PathVariable("path_relative") String pathRelative,
             @RequestHeader(value = "range", required = false) String range
     ) throws IOException {
-        VideoRange videoRange = videoService.getVideoRange(pathRelative, range);
+        VideoService.VideoRange videoRange = videoService.getVideoRange(pathRelative, range);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("content-type", "video/mp4");
