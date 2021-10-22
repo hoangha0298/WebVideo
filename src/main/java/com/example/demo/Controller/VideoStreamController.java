@@ -39,6 +39,22 @@ public class VideoStreamController {
         }
     }
 
+    @GetMapping("/image/{path_relative}")
+    public ResponseEntity<InputStreamResource> getImage(
+            @PathVariable("path_relative") String pathRelative
+    ) throws Exception {
+//        File image = videoService.getImage(pathRelative);
+        byte[] image = videoService.getImageFromVideo(pathRelative);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("content-type", "image/gif");
+        headers.set("accept-ranges", "bytes");
+        headers.set("connection", "keep-alive");
+        headers.set("content-length", String.valueOf(image.length));
+
+        return new ResponseEntity<>(new InputStreamResource(new ByteArrayInputStream(image)), headers, HttpStatus.OK);
+    }
+
     @GetMapping("/tree_video")
     public ResponseDTO<FolderDTO> getTreeFolderVideo() {
         return new ResponseDTO<>().setData(videoService.getTreeFolderVideo()).setMessage("Danh sách thư mục con cháu (bao gồm video) trong thư mục gốc");

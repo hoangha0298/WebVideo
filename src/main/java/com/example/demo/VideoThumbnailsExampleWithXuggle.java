@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.Service.FileService;
+import com.example.demo.Service.VideoService;
 import com.xuggle.mediatool.IMediaReader;
 import com.xuggle.mediatool.MediaListenerAdapter;
 import com.xuggle.mediatool.ToolFactory;
@@ -16,7 +17,7 @@ public class VideoThumbnailsExampleWithXuggle {
 
     public static final double SECONDS_BETWEEN_FRAMES = 10;
 
-    private static final String inputFilename = FileService.PATH_ROOT_VIDEO + "mov_bbb.mp4";
+    private static final String inputFilename = VideoService.PATH_ROOT_VIDEO + "mov_bbb.mp4";
     private static final String outputFilePrefix = "C:\\Users\\Admin\\Desktop\\mysnapshot";
 
     // The video stream index, used to ensure we display frames from one and
