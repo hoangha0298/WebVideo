@@ -1,5 +1,6 @@
 package com.example.demo.Model.DTO;
 
+import com.example.demo.Service.VideoService;
 import lombok.Getter;
 
 import java.io.File;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 public class FolderDTO {
 
     private final static String[] TYPES_OF_VIDEO = {"mp4"};
+    private static VideoService videoService = new VideoService();
     private static File folderRoot = null;
 
     private ArrayList<VideoDTO> videos;
@@ -54,10 +56,12 @@ public class FolderDTO {
             for (String typeCheck : types) {
                 // nếu là video thì thêm vào list
                 if (file.getName().toLowerCase().endsWith("." + typeCheck.toLowerCase())) {
+                    Long lengthSecond = videoService.getLengthTimeVideo(file);
                     VideoDTO videoDTO = new VideoDTO()
                             .setPathRelative(getPathRelative(file.getPath()))
                             .setType(typeCheck.toLowerCase())
-                            .setLength(file.length());
+                            .setLength(file.length())
+                            .setLengthSecond(lengthSecond);
                     videos.add(videoDTO);
                     break;
                 }

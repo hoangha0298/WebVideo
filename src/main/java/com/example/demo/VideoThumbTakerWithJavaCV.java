@@ -5,13 +5,30 @@ import com.example.demo.Service.VideoService;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
 
 import java.awt.image.BufferedImage;
 
 public class VideoThumbTakerWithJavaCV {
 
+    public final static String PATH_ROOT_VIDEO_TEST = "C:\\Users\\Admin\\Desktop\\video\\";
+
     public static void main(String[] args) throws Exception {
+        lengthTime();
+    }
+
+    public static void lengthTime() throws FrameGrabber.Exception {
+        String nameVideo = "View_From_A_Blue_Moon_Trailer-1080p.mp4";
+        FFmpegFrameGrabber g = new FFmpegFrameGrabber(PATH_ROOT_VIDEO_TEST + nameVideo);
+        g.start();
+        long second = (long) (g.getLengthInVideoFrames() / g.getFrameRate());
+        System.out.println(second);
+        System.out.println(second/60 + ":" + second%60);
+        g.stop();
+    }
+
+    public static void videoToGif() throws FrameGrabber.Exception {
         long countTimeRun = System.currentTimeMillis();
 
 //        String nameVideo = "mov_bbb.mp4";

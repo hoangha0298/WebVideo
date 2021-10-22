@@ -8,6 +8,7 @@ public class VideoDTO {
     private String pathRelative;
     // độ dài đơn vị byte
     private Long length;
+    private Long lengthSecond;
     private String type;
     private String pathPreviewRelative;
     private String pathImageRelative;
@@ -37,6 +38,11 @@ public class VideoDTO {
 
     public VideoDTO setPathImageRelative(String pathImageRelative) {
         this.pathImageRelative = pathImageRelative;
+        return this;
+    }
+
+    public VideoDTO setLengthSecond(Long lengthSecond) {
+        this.lengthSecond = lengthSecond;
         return this;
     }
 }

@@ -62,7 +62,7 @@
             font-weight: 500;
             font-size: 0.85rem;
             margin: 0 0 3px;
-            color: #030303;
+            color: #bdc1c6;
         }
 
     </style>
@@ -82,7 +82,7 @@
         }
     </script>
 </head>
-<body>
+<body style="background-color: #202124">
 
 <%
     FolderDTO folder = (FolderDTO) request.getAttribute("folderDTO");
@@ -94,11 +94,11 @@
         <%for (int i = 0; i < folder.getVideos().size(); i++) {%>
 
         <div class="item">
-            <a onclick="viewVideo('<%=folder.getVideos().get(i).getPathRelative()%>')">
+            <div onclick="viewVideo('<%=folder.getVideos().get(i).getPathRelative()%>')" style="cursor: pointer">
                 <div class="video-image" style="background-image: url('/video_service/image/<%=folder.getVideos().get(i).getPathRelative()%>');">
-                    <div class="video-time">30:10</div>
+                    <div class="video-time"><%=folder.getVideos().get(i).getLengthSecond()/60%>:<%=folder.getVideos().get(i).getLengthSecond()%60%></div>
                 </div>
-            </a>
+            </div>
             <div class="video-information">
                 <h3 class="name-video"><%=folder.getVideos().get(i).getPathRelative()%></h3>
             </div>

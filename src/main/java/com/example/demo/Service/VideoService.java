@@ -1,7 +1,6 @@
 package com.example.demo.Service;
 
 import com.example.demo.Model.DTO.FolderDTO;
-import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import lombok.Data;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
@@ -16,8 +15,8 @@ import java.io.*;
 @Service
 public class VideoService {
 
-//    public final static String PATH_ROOT_VIDEO = "C:\\Users\\Admin\\Desktop\\video\\";
-    public final static String PATH_ROOT_VIDEO = "C:\\D\\New folder\\";
+    public final static String PATH_ROOT_VIDEO = "C:\\Users\\Admin\\Desktop\\video\\";
+//    public final static String PATH_ROOT_VIDEO = "C:\\D\\New folder\\";
     public final static String PATH_ROOT_IMAGE = "C:\\Users\\Admin\\Desktop\\video\\";
 
     @Autowired
@@ -75,7 +74,6 @@ public class VideoService {
 
     // chỉ lấy khung hình ở giữa video làm ảnh đại diện
     public byte[] getImageFromVideo(String pathRelativeVideo) throws Exception {
-
         FFmpegFrameGrabber g = new FFmpegFrameGrabber(PATH_ROOT_VIDEO + pathRelativeVideo);
         g.start();
         int totalFrame = g.getLengthInVideoFrames();
@@ -90,6 +88,29 @@ public class VideoService {
         g.stop();
 
         return ba.toByteArray();
+    }
+
+    // trả về thời gian video tính bằng giây
+//    public long getLengthTimeVideo(String pathRelativeVideo) throws Exception {
+//        FFmpegFrameGrabber g = new FFmpegFrameGrabber(PATH_ROOT_VIDEO + pathRelativeVideo);
+//        g.start();
+//        long second = (long) (g.getLengthInVideoFrames() / g.getFrameRate());
+//        g.stop();
+//        return second;
+//    }
+
+    // trả về thời gian video tính bằng giây
+    public long getLengthTimeVideo(File video) {
+        long second = 0;
+        try {
+            FFmpegFrameGrabber g = new FFmpegFrameGrabber(video);
+            g.start();
+            second = (long) (g.getLengthInVideoFrames() / g.getFrameRate());
+            g.stop();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return second;
     }
 
 }
