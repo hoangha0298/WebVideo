@@ -19,9 +19,9 @@ public class VideoStreamController {
     @Autowired
     private VideoService videoService;
 
-    @GetMapping("/video/{path_relative}")
+    @GetMapping("/video")
     public ResponseEntity<InputStreamResource> getVideo(
-            @PathVariable("path_relative") String pathRelative,
+            String pathRelative,
             @RequestHeader(value = "range", required = false) String range
     ) throws IOException {
         VideoService.VideoRange videoRange = videoService.getVideoRange(pathRelative, range);
@@ -39,9 +39,9 @@ public class VideoStreamController {
         }
     }
 
-    @GetMapping("/image/{path_relative}")
+    @GetMapping("/image")
     public ResponseEntity<InputStreamResource> getImage(
-            @PathVariable("path_relative") String pathRelative
+            String pathRelative
     ) throws Exception {
 //        File image = videoService.getImage(pathRelative);
         byte[] image = videoService.getImageFromVideo(pathRelative);

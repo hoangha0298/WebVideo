@@ -1,4 +1,7 @@
 <%@ page import="com.example.demo.Model.DTO.FolderDTO" %>
+<%@ page import="com.example.demo.Model.DTO.VideoDTO" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.io.UnsupportedEncodingException" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +19,8 @@
 
         .container {
             margin: auto;
-            max-width: 700px;
+            max-width: 1200px;
+            width: 100vw;
         }
 
         .row {
@@ -30,8 +34,11 @@
         }
 
         .video-image {
-            width: 330px;
-            height: 190px;
+            width: calc(46vw - (20px * 2));
+            height: calc((46vw - (20px * 2)) / 16 * 9);
+            border-radius: 5px;
+            /*width: 330px;*/
+            /*height: 190px;*/
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -63,26 +70,25 @@
             font-size: 0.85rem;
             margin: 0 0 3px;
             color: #bdc1c6;
+            word-break: break-all;
         }
 
     </style>
     <script>
-        function encodePramsUrl(params) {
-            const paramsUrl = [];
-            for (let nameParams in params) {
-                paramsUrl.push(encodeURIComponent(nameParams) + '=' + encodeURIComponent(params[nameParams]));
-            }
-            return paramsUrl.join('&');
-        }
 
         function viewVideo(pathRelative) {
-            let params = {pathRelative: pathRelative};
-            let url = '/video?' + encodePramsUrl(params);
+            let url = '/video?pathRelative=' + pathRelative;
             window.location = url;
         }
     </script>
 </head>
 <body style="background-color: #202124">
+
+<%!
+    String getUrlImage(VideoDTO videoDTO) throws UnsupportedEncodingException {
+        return "/video_service/image?pathRelative=" + URLEncoder.encode(videoDTO.getPathRelative(), "UTF-8");
+    }
+%>
 
 <%
     FolderDTO folder = (FolderDTO) request.getAttribute("folderDTO");
@@ -94,17 +100,50 @@
         <%for (int i = 0; i < folder.getVideos().size(); i++) {%>
 
         <div class="item">
-            <div onclick="viewVideo('<%=folder.getVideos().get(i).getPathRelative()%>')" style="cursor: pointer">
-                <div class="video-image" style="background-image: url('/video_service/image/<%=folder.getVideos().get(i).getPathRelative()%>');">
-                    <div class="video-time"><%=folder.getVideos().get(i).getLengthSecond()/60%>:<%=folder.getVideos().get(i).getLengthSecond()%60%></div>
+            <div onclick="viewVideo('<%=URLEncoder.encode(folder.getVideos().get(i).getPathRelative(), "UTF-8")%>')" style="cursor: pointer">
+                <div class="video-image"
+                     style="background-image: url('<%=getUrlImage(folder.getVideos().get(i))%>');">
+                    <div class="video-time"><%=folder.getVideos().get(i).getLengthSecond() / 60%>
+                        :<%=folder.getVideos().get(i).getLengthSecond() % 60%>
+                    </div>
                 </div>
             </div>
             <div class="video-information">
-                <h3 class="name-video"><%=folder.getVideos().get(i).getPathRelative()%></h3>
+                <h3 class="name-video"><%=folder.getVideos().get(i).getPathRelative()%>
+                </h3>
             </div>
         </div>
 
         <%}%>
+
+        <div style="width: 100%; height: 40px; background-color: darkcyan"></div>
+
+        <%
+            for (int j = 0; j < folder.getSubFolders().size(); j++) {
+                FolderDTO folderSub = folder.getSubFolders().get(j);
+                for (int i = 0; i < folderSub.getVideos().size(); i++) {
+                    VideoDTO video = folderSub.getVideos().get(i);
+        %>
+
+        <div class="item">
+            <div onclick="viewVideo('<%=URLEncoder.encode(video.getPathRelative(), "UTF-8")%>')" style="cursor: pointer">
+                <div class="video-image"
+                     style="background-image: url('<%=getUrlImage(video)%>');">
+                    <div class="video-time"><%=video.getLengthSecond() / 60%>
+                        :<%=video.getLengthSecond() % 60%>
+                    </div>
+                </div>
+            </div>
+            <div class="video-information">
+                <h3 class="name-video"><%=video.getPathRelative()%>
+                </h3>
+            </div>
+        </div>
+
+        <%
+                }
+            }
+        %>
 
     </div>
 </div>

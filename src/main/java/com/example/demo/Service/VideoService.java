@@ -15,8 +15,8 @@ import java.io.*;
 @Service
 public class VideoService {
 
-    public final static String PATH_ROOT_VIDEO = "C:\\Users\\Admin\\Desktop\\video\\";
-//    public final static String PATH_ROOT_VIDEO = "C:\\D\\New folder\\";
+//    public final static String PATH_ROOT_VIDEO = "C:\\Users\\Admin\\Desktop\\video\\";
+    public final static String PATH_ROOT_VIDEO = "C:\\D\\New folder\\";
     public final static String PATH_ROOT_IMAGE = "C:\\Users\\Admin\\Desktop\\video\\";
 
     @Autowired
