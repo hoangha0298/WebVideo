@@ -13,7 +13,7 @@ public class VideoResponse extends FileResponse {
 	// độ dài đơn vị byte
 	private Long length;
 
-	private Long lengthSecond;
+	private Integer lengthSecond;
 
 	private String type;
 
