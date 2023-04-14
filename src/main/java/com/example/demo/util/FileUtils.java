@@ -3,8 +3,10 @@ package com.example.demo.util;
 import com.example.demo.model.response.FileResponse;
 import com.example.demo.model.response.FolderResponse;
 import com.example.demo.model.response.VideoResponse;
+import org.springframework.util.SerializationUtils;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class FileUtils {
@@ -51,7 +53,7 @@ public class FileUtils {
 			String typeInName = getExtensionByStringHandling(file.getName()).get();
 
 			if (TYPES_VIDEO_SUPPORT.contains(typeInName)) {
-				Long lengthSecond = VideoUtils.getLengthTimeVideo(file);
+				Integer lengthSecond = VideoUtils.getLengthTimeVideo(file);
 				VideoResponse videoResponse = VideoResponse.builder()
 						.pathAbsolute(file.toURI())
 						.type(typeInName.toLowerCase())
@@ -92,6 +94,30 @@ public class FileUtils {
 		}
 
 		return folderResponse;
+	}
+
+	public static <T> boolean setAttribute(File file, String attributeName, T attributeValue) {
+		try {
+			Files.setAttribute(file.toPath(), attributeName, SerializationUtils.serialize(attributeValue));
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static <T> T getAttribute (File file, String attributeName) {
+		try {
+			byte[] bytes = (byte[]) Files.getAttribute(file.toPath(), attributeName);
+			if (bytes != null && bytes.length != 0) {
+				return (T) SerializationUtils.deserialize(bytes);
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
