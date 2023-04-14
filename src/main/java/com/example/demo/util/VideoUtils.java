@@ -1,55 +1,126 @@
 package com.example.demo.util;
 
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameGrabber;
-import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.*;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
 public class VideoUtils {
 
+	public static final Java2DFrameConverter java2DFrameConverter = new Java2DFrameConverter();
+
 	// chỉ lấy khung hình ở giữa video làm ảnh đại diện
-	public static byte[] getImageFromVideo(File video) {
-		FFmpegFrameGrabber g = new FFmpegFrameGrabber(video);
-		ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+	public static BufferedImage getImageFromVideo(File file) {
+
+		FFmpegFrameGrabber video = new FFmpegFrameGrabber(file);
+		BufferedImage bufferedImage = null;
 
 		try {
-			g.start();
+			video.start();
 
-			int totalFrame = g.getLengthInVideoFrames();
+			int totalFrame = video.getLengthInVideoFrames();
 			int frameGet = totalFrame / 2;
-			Java2DFrameConverter converter = new Java2DFrameConverter();
 
-			g.setFrameNumber(frameGet);
-			Frame frame = g.grabKeyFrame();
-			BufferedImage bufferedImage = converter.getBufferedImage(frame);
-			ImageIO.write(bufferedImage, "png", byteArray);
-			g.stop();
+			video.setFrameNumber(frameGet);
+			Frame frame = video.grabKeyFrame();
+			bufferedImage = java2DFrameConverter.convert(frame);
+			video.stop();
 
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		}
 
-		return byteArray.toByteArray();
+		return bufferedImage;
 	}
 
 	// trả về thời gian video tính bằng giây
-	public static long getLengthTimeVideo(File video) {
-		long second = 0;
+	public static int getLengthTimeVideo(File video) {
+		int second = 0;
 		try {
 			FFmpegFrameGrabber g = new FFmpegFrameGrabber(video);
 			g.start();
-			second = (long) (g.getLengthInVideoFrames() / g.getFrameRate());
+			second = (int) (g.getLengthInVideoFrames() / g.getFrameRate());
 			g.stop();
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return second;
+	}
+
+	public static double getLengthTimeVideo(int numberFrame, double frameRate) {
+		return numberFrame / frameRate;
+	}
+
+	// cắt video
+	public static void createVideoPreview(File videoInput, File output) {
+		Integer coreNumber = new Double(Math.ceil(Runtime.getRuntime().availableProcessors() / 4.0)).intValue();
+		FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoInput);
+		int totalFrame = grabber.getFrameNumber();
+		grabber.setVideoOption("threads", coreNumber.toString());
+
+		try {
+			grabber.start();
+
+			FrameRecorder recorder = new FFmpegFrameRecorder(output, grabber.getImageWidth(), grabber.getImageHeight());
+			recorder.setFormat(grabber.getFormat());
+			recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
+			recorder.setFrameRate(grabber.getFrameRate());
+			recorder.setVideoBitrate(grabber.getVideoBitrate());
+			recorder.setVideoCodec(grabber.getVideoCodec());
+			recorder.setVideoOption("preset", "ultrafast");
+			recorder.setVideoOption("threads", coreNumber.toString());
+			recorder.setVideoCodecName("libx264");
+
+			recorder.start();
+
+			int frameHanded = 0;
+			long startTime = System.currentTimeMillis();
+
+			FFmpegFrameFilter filter = new FFmpegFrameFilter(
+					"scale=400x300",
+					grabber.getImageWidth(),
+					grabber.getImageHeight()
+			);
+			filter.setPixelFormat(grabber.getPixelFormat());
+			filter.setFrameRate(grabber.getFrameRate() / 10);
+			filter.start();
+
+			int currentFrame = -1;
+			Frame frame2;
+			while ((frame2 = grabber.grab()) != null) {
+				currentFrame++;
+
+				if (currentFrame < 100) {
+					continue;
+				}
+
+				if (currentFrame % 20 != 0) {
+					continue;
+				}
+
+				filter.push(frame2);
+			}
+
+			Frame frame3;
+			while ((frame3 = filter.pull()) != null) {
+				frameHanded++;
+				recorder.record(frame3);
+			}
+
+
+			filter.stop();
+			filter.release();
+			recorder.stop();
+			grabber.stop();
+
+			float secs = (System.currentTimeMillis() - startTime) / 1000.0f;
+			System.out.println("processing " + frameHanded + " frames took " + (Math.round(secs * 1000) / 1000.0f) + " (" + (Math.round(frameHanded / secs * 1000) / 1000.0f) + " fps)");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }
