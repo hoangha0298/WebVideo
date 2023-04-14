@@ -1,6 +1,5 @@
 package com.example.demo.model.response;
 
-import com.example.demo.ResponseType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 

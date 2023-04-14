@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.ResponseType;
+import com.example.demo.model.response.ResponseType;
 import com.example.demo.model.response.Response;
 
 public class BaseRestController {
