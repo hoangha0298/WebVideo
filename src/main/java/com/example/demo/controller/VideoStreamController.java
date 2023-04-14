@@ -1,7 +1,5 @@
-package com.example.demo.Controller;
+package com.example.demo.controller;
 
-import com.example.demo.Model.DTO.FolderDTO;
-import com.example.demo.Model.DTO.ResponseDTO;
 import com.example.demo.Service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -40,10 +38,8 @@ public class VideoStreamController {
     }
 
     @GetMapping("/image")
-    public ResponseEntity<InputStreamResource> getImage(
-            String pathRelative
-    ) throws Exception {
-//        File image = videoService.getImage(pathRelative);
+    public ResponseEntity<InputStreamResource> getImage(String pathRelative) {
+
         byte[] image = videoService.getImageFromVideo(pathRelative);
 
         HttpHeaders headers = new HttpHeaders();
@@ -53,11 +49,6 @@ public class VideoStreamController {
         headers.set("content-length", String.valueOf(image.length));
 
         return new ResponseEntity<>(new InputStreamResource(new ByteArrayInputStream(image)), headers, HttpStatus.OK);
-    }
-
-    @GetMapping("/tree_video")
-    public ResponseDTO<FolderDTO> getTreeFolderVideo() {
-        return new ResponseDTO<>().setData(videoService.getTreeFolderVideo()).setMessage("Danh sách thư mục con cháu (bao gồm video) trong thư mục gốc");
     }
 
 }

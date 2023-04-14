@@ -1,6 +1,6 @@
 package com.example.demo.Service;
 
-import com.example.demo.ResponseType;
+import com.example.demo.model.response.ResponseType;
 import com.example.demo.model.response.FolderResponse;
 import com.example.demo.util.FileUtils;
 import lombok.Getter;
