@@ -24,6 +24,9 @@ public class FolderService {
 		if (!folderRequest.exists()) {
 			throw new RuntimeException(ResponseType.UNKNOWN_SOURCE.toString());
 		}
+		if (!folderRequest.isDirectory()) {
+			throw new RuntimeException(ResponseType.SOURCE_IS_NOT_FOLDER.toString());
+		}
 
 		return FileUtils.convertToResponse(folderRequest);
 	}

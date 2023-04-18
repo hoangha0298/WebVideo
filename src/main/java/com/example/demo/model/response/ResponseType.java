@@ -51,6 +51,8 @@ public class ResponseType implements Cloneable {
 
     public static ResponseType UNKNOWN_SOURCE = new ResponseType(404, TypeEnum.ERROR_CLIENT, "Không tìm thấy tài nguyên yêu cầu");
 
+    public static ResponseType SOURCE_IS_NOT_FOLDER = new ResponseType(410, TypeEnum.ERROR_CLIENT, "Tài nguyên yêu cầu không phải thư mục");
+
     // type error server
     public static ResponseType ERROR_SERVER = new ResponseType(500, TypeEnum.ERROR_SERVER, "Lỗi server");
 
