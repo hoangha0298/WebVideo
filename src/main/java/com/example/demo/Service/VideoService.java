@@ -1,26 +1,22 @@
 package com.example.demo.Service;
 
-import com.example.demo.Model.DTO.FolderDTO;
+import com.example.demo.util.FileUtils;
+import com.example.demo.util.VideoUtils;
 import lombok.Data;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
-import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.Java2DFrameConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 public class VideoService {
 
-//    public final static String PATH_ROOT_VIDEO = "C:\\Users\\Admin\\Desktop\\video\\";
-    public final static String PATH_ROOT_VIDEO = "C:\\D\\New folder\\";
-    public final static String PATH_ROOT_IMAGE = "C:\\Users\\Admin\\Desktop\\video\\";
-
-    @Autowired
-    private FileService fileService;
+    @Getter
+    @Value("${custom.source.root}")
+    private String pathRootVideo;
 
     @Data
     public static class VideoRange {
@@ -44,9 +40,18 @@ public class VideoService {
         }
     }
 
+    public byte[] getImageFromVideo(String pathRelative) {
+        File video = new File(pathRootVideo, pathRelative);
+
+//        return VideoUtils.getImageFromVideo(video);
+        return null;
+    }
+
     public VideoRange getVideoRange(String pathRelative, String headerRange) throws IOException {
         Long rangeBegin = 0l;
-        Long rangeEnd = fileService.getFile(PATH_ROOT_VIDEO + pathRelative).length() - 1;
+        Long lengthFile = FileUtils.getFile(pathRootVideo + pathRelative).length() - 1;
+        Long rangeEnd = lengthFile;
+        Long maxSizeArrays = 1024l * 1024 * 10;
 
         if (headerRange != null) {
             String[] ranges = headerRange.replace("bytes=", "").split("-");
@@ -56,61 +61,21 @@ public class VideoService {
             }
         }
 
-        VideoRange videoRange = new VideoRange(pathRelative, rangeBegin, rangeEnd, fileService.getFile(PATH_ROOT_VIDEO + pathRelative).length(), null);
-        InputStream videoStream = fileService.getInputStream(PATH_ROOT_VIDEO + pathRelative, rangeBegin, videoRange.lengthRange());
+        VideoRange videoRange = new VideoRange(
+                pathRelative,
+                rangeBegin,
+                rangeEnd,
+                FileUtils.getFile(pathRootVideo + pathRelative).length(),
+                null
+        );
+        InputStream videoStream = FileUtils.getInputStream(
+                pathRootVideo + pathRelative,
+                rangeBegin,
+                videoRange.lengthRange() <= maxSizeArrays ? videoRange.lengthRange() : 0
+        );
+
         videoRange.setRangeStream(videoStream);
         return videoRange;
-    }
-
-    public File getImage(String pathRelative) throws IOException {
-        File image = fileService.getFile(PATH_ROOT_IMAGE + "neon.PNG");
-        return image;
-    }
-
-    public FolderDTO getTreeFolderVideo() {
-        File folderRootVideo = new File(PATH_ROOT_VIDEO);
-        return FolderDTO.getFolderRoot(folderRootVideo);
-    }
-
-    // chỉ lấy khung hình ở giữa video làm ảnh đại diện
-    public byte[] getImageFromVideo(String pathRelativeVideo) throws Exception {
-        FFmpegFrameGrabber g = new FFmpegFrameGrabber(PATH_ROOT_VIDEO + pathRelativeVideo);
-        g.start();
-        int totalFrame = g.getLengthInVideoFrames();
-        int frameGet = totalFrame / 2;
-        Java2DFrameConverter converter = new Java2DFrameConverter();
-
-        g.setFrameNumber(frameGet);
-        Frame frame = g.grabKeyFrame();
-        BufferedImage bufferedImage = converter.getBufferedImage(frame);
-        ByteArrayOutputStream ba = new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "png", ba);
-        g.stop();
-
-        return ba.toByteArray();
-    }
-
-    // trả về thời gian video tính bằng giây
-//    public long getLengthTimeVideo(String pathRelativeVideo) throws Exception {
-//        FFmpegFrameGrabber g = new FFmpegFrameGrabber(PATH_ROOT_VIDEO + pathRelativeVideo);
-//        g.start();
-//        long second = (long) (g.getLengthInVideoFrames() / g.getFrameRate());
-//        g.stop();
-//        return second;
-//    }
-
-    // trả về thời gian video tính bằng giây
-    public long getLengthTimeVideo(File video) {
-        long second = 0;
-        try {
-            FFmpegFrameGrabber g = new FFmpegFrameGrabber(video);
-            g.start();
-            second = (long) (g.getLengthInVideoFrames() / g.getFrameRate());
-            g.stop();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return second;
     }
 
 }

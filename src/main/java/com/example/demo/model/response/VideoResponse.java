@@ -1,5 +1,6 @@
 package com.example.demo.model.response;
 
+import com.example.demo.model.DTO.Video;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -17,7 +18,7 @@ public class VideoResponse extends FileResponse {
 
 	private String type;
 
-	private String pathPreviewRelative;
+	private Video.Attributes attributes;
 
 	private String pathImageRelative;
 }

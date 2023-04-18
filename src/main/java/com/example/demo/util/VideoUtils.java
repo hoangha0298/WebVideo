@@ -1,13 +1,27 @@
 package com.example.demo.util;
 
+import com.example.demo.model.DTO.Video;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 public class VideoUtils {
+
+	public static final String NAME_FIELD_SAVE_INFO_CUSTOM = "user:infoVideoCustom";
+
+	public final static Set<String> TYPES_VIDEO_SUPPORT = CollectionUtils.asSet("mp4");
+
+	public static Video.Attributes getAttributesFromFile(Video video) {
+		return FileUtils.getAttribute(video, NAME_FIELD_SAVE_INFO_CUSTOM);
+	}
+
+	public static boolean setAttributesToFile(Video video, Video.Attributes attributes) {
+		return FileUtils.setAttribute(video, NAME_FIELD_SAVE_INFO_CUSTOM, attributes);
+	}
 
 	public static final Java2DFrameConverter java2DFrameConverter = new Java2DFrameConverter();
 
@@ -36,7 +50,7 @@ public class VideoUtils {
 	}
 
 	// trả về thời gian video tính bằng giây
-	public static int getLengthTimeVideo(File video) {
+	public static int getLengthTimeVideo(Video video) {
 		int second = 0;
 		try {
 			FFmpegFrameGrabber g = new FFmpegFrameGrabber(video);

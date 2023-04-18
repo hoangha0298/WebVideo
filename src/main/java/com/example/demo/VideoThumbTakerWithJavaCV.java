@@ -1,18 +1,19 @@
 package com.example.demo;
 
-import com.example.demo.Service.FileService;
-import com.example.demo.Service.VideoService;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.awt.image.BufferedImage;
 
 public class VideoThumbTakerWithJavaCV {
 
     public final static String PATH_ROOT_VIDEO_TEST = "C:\\Users\\Admin\\Desktop\\video\\";
+    @Value("${custom.source.root}")
+    private static String PATH_ROOT_VIDEO;
 
     public static void main(String[] args) throws Exception {
         lengthTime();
@@ -33,7 +34,7 @@ public class VideoThumbTakerWithJavaCV {
 
 //        String nameVideo = "mov_bbb.mp4";
         String nameVideo = "View_From_A_Blue_Moon_Trailer-1080p.mp4";
-        FFmpegFrameGrabber g = new FFmpegFrameGrabber(VideoService.PATH_ROOT_VIDEO + nameVideo);
+        FFmpegFrameGrabber g = new FFmpegFrameGrabber(PATH_ROOT_VIDEO + nameVideo);
         g.start();
         int totalFrame = g.getLengthInVideoFrames();
         int frameDistanceRecord = totalFrame / 100;

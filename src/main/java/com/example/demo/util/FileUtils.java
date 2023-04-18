@@ -1,5 +1,6 @@
 package com.example.demo.util;
 
+import com.example.demo.model.DTO.Video;
 import com.example.demo.model.response.FileResponse;
 import com.example.demo.model.response.FolderResponse;
 import com.example.demo.model.response.VideoResponse;
@@ -10,9 +11,6 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class FileUtils {
-
-	private final static Set<String> TYPES_VIDEO_SUPPORT = CollectionUtils.asSet("mp4");
-
 	public static InputStream getInputStream(String path, Long begin, Long length) throws IOException {
 		File file = new File(path);
 		return getInputStream(file, begin, length);
@@ -52,11 +50,13 @@ public class FileUtils {
 
 			String typeInName = getExtensionByStringHandling(file.getName()).get();
 
-			if (TYPES_VIDEO_SUPPORT.contains(typeInName)) {
-				Integer lengthSecond = VideoUtils.getLengthTimeVideo(file);
+			if (VideoUtils.TYPES_VIDEO_SUPPORT.contains(typeInName)) {
+				Video video = new Video(file);
+				Integer lengthSecond = VideoUtils.getLengthTimeVideo(video);
 				VideoResponse videoResponse = VideoResponse.builder()
-						.pathAbsolute(file.toURI())
+						.pathAbsolute(video.toURI())
 						.type(typeInName.toLowerCase())
+						.attributes(video.getAttributes())
 						.length(file.length())
 						.lengthSecond(lengthSecond)
 						.build();

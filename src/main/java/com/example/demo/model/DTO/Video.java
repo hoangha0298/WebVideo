@@ -1,6 +1,6 @@
 package com.example.demo.model.DTO;
 
-import com.example.demo.util.FileUtils;
+import com.example.demo.util.VideoUtils;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -11,9 +11,6 @@ import java.net.URI;
 @Getter
 @Setter
 public class Video extends File {
-
-	public static final String NAME_FIELD_SAVE_INFO_CUSTOM = "user:infoVideoCustom";
-
 
 	@Data
 	@SuperBuilder
@@ -67,7 +64,7 @@ public class Video extends File {
 	private Attributes attributes;
 
 	private void init() {
-		attributes = getAtributesFromFile(this);
+		attributes = VideoUtils.getAttributesFromFile(this);
 	}
 
 	private void validateInit() {
@@ -110,18 +107,10 @@ public class Video extends File {
 	}
 
 	public boolean setAttributes(Attributes attributes) {
-		if (setAtributesToFile(this, attributes)) {
+		if (VideoUtils.setAttributesToFile(this, attributes)) {
 			this.attributes = attributes;
 			return true;
 		}
 		return false;
-	}
-
-	public Video.Attributes getAtributesFromFile(Video video) {
-		return FileUtils.getAttribute(video, NAME_FIELD_SAVE_INFO_CUSTOM);
-	}
-
-	public boolean setAtributesToFile(Video video, Video.Attributes attributes) {
-		return FileUtils.setAttribute(video, NAME_FIELD_SAVE_INFO_CUSTOM, attributes);
 	}
 }
