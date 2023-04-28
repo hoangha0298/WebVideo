@@ -17,7 +17,8 @@ public class VideoUtils {
 	public final static Set<String> TYPES_VIDEO_SUPPORT = CollectionUtils.asSet("mp4");
 
 	public static Video.Attributes getAttributesFromFile(Video video) throws IOException {
-		return FileUtils.getAttribute(video, NAME_FIELD_SAVE_INFO_CUSTOM, new TypeReference<Video.Attributes>() {});
+		return FileUtils.getAttribute(video, NAME_FIELD_SAVE_INFO_CUSTOM, new TypeReference<Video.Attributes>() {
+		});
 	}
 
 	public static boolean removeAttributesFromFile(Video video) {

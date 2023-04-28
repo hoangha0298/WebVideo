@@ -1,7 +1,10 @@
 package com.example.demo.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -9,9 +12,9 @@ import lombok.*;
 @Builder
 public class Response<T> {
 
-    @JsonProperty("response_type")
-    private ResponseType responseType;
+	@JsonProperty("response_type")
+	private ResponseType responseType;
 
-    private T data;
+	private T data;
 
 }

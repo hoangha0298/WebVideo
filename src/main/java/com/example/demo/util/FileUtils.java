@@ -7,12 +7,13 @@ import com.example.demo.model.response.VideoResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.SerializationUtils;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class FileUtils {
 
@@ -113,7 +114,7 @@ public class FileUtils {
 		return false;
 	}
 
-	public static <T> T getAttribute (File file, String attributeName, TypeReference<T> typeReference) throws IOException {
+	public static <T> T getAttribute(File file, String attributeName, TypeReference<T> typeReference) throws IOException {
 		byte[] bytes = (byte[]) Files.getAttribute(file.toPath(), attributeName);
 		if (!ArrayUtils.isEmpty(bytes)) {
 			return objectMapper.readValue(bytes, typeReference);

@@ -1,7 +1,10 @@
 package com.example.demo.model.DTO;
 
 import com.example.demo.util.VideoUtils;
-import lombok.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.io.File;
@@ -24,7 +27,7 @@ public class Video extends File {
 			return videoPool;
 		}
 
-		private Map<Attributes.Hash, Video> pool = new HashMap<>();
+		private final Map<Attributes.Hash, Video> pool = new HashMap<>();
 
 		private VideoPool() {
 		}
@@ -57,8 +60,11 @@ public class Video extends File {
 		@SuperBuilder
 		@NoArgsConstructor
 		public static class Hash {
+
 			private String hashVideo;
+
 			private String hashAudio;
+
 		}
 
 		private Hash hash;
@@ -66,6 +72,7 @@ public class Video extends File {
 		private Hash hashPreview;
 
 		private boolean isPreview = false;
+
 	}
 
 	// attribute để ghi vào file
@@ -123,11 +130,8 @@ public class Video extends File {
 	}
 
 	public boolean setAttributes(Attributes attributes) {
-		if (VideoUtils.setAttributesToFile(this, attributes)) {
-//			this.attributes = attributes;
-			return true;
-		}
-		return false;
+		//			this.attributes = attributes;
+		return VideoUtils.setAttributesToFile(this, attributes);
 	}
 
 	public Attributes getAttributes() {
@@ -140,4 +144,5 @@ public class Video extends File {
 		}
 		return null;
 	}
+
 }

@@ -23,144 +23,144 @@ import java.util.Locale;
 
 public class Test {
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 //        getPng();
 
 //        createGif();
 
 //        showAllTypeImageSupport();
 
-        createVideoPreview2();
+		createVideoPreview2();
 
 //        setData();
 
-        viewData();
+		viewData();
 
-        viewDataOutPut();
+		viewDataOutPut();
 
 //        viewDataOutPut();
 
 //        viewHash();
-    }
+	}
 
-    private static Video getInput() {
-        Video result;
-
-//        String path = "C:\\Users\\Admin\\Desktop\\video\\natura Switzerland";
-//        result = new Video(path, "Switzerland.mp4");
-
-        String path = "C:\\Users\\Hoang\\Desktop\\video\\a b c ne";
-        result = new Video(path, "Switzerland.mp4");
-
-        return result;
-    }
-
-    private static Video getOutput() {
-        Video result;
+	private static Video getInput() {
+		Video result;
 
 //        String path = "C:\\Users\\Admin\\Desktop\\video\\natura Switzerland";
 //        result = new Video(path, "Switzerland.mp4");
 
-        String path = "C:\\Users\\Hoang\\Desktop\\video\\a b c ne";
-        result = new Video(path, "Switzerland_preview.mp4");
+		String path = "C:\\Users\\Hoang\\Desktop\\video\\a b c ne";
+		result = new Video(path, "Switzerland.mp4");
 
-        return result;
-    }
+		return result;
+	}
 
-    public static BufferedImage getPng() throws IOException {
-        String path = "C:\\Users\\Hoang\\Desktop\\video\\a";
+	private static Video getOutput() {
+		Video result;
 
-        File video = new File(path, "cuu-non-120739.mp4");
+//        String path = "C:\\Users\\Admin\\Desktop\\video\\natura Switzerland";
+//        result = new Video(path, "Switzerland.mp4");
 
-        File thumbnail = new File(path, "thumbnail.png");
-        FileOutputStream thumbnailOutputStream = new FileOutputStream(thumbnail);
+		String path = "C:\\Users\\Hoang\\Desktop\\video\\a b c ne";
+		result = new Video(path, "Switzerland_preview.mp4");
 
-        BufferedImage bufferedImage = VideoUtils.getImageFromVideo(video);
+		return result;
+	}
 
-        thumbnailOutputStream.write(ImageUtils.toByteArray(bufferedImage, ImageUtils.png));
+	public static BufferedImage getPng() throws IOException {
+		String path = "C:\\Users\\Hoang\\Desktop\\video\\a";
 
-        return bufferedImage;
-    }
+		File video = new File(path, "cuu-non-120739.mp4");
 
-    public static void createVideoPreview2() {
-        Video video = getInput();
-        new VideoConverterByCommandLineImpl().buildVideoPreview(video, null);
-    }
+		File thumbnail = new File(path, "thumbnail.png");
+		FileOutputStream thumbnailOutputStream = new FileOutputStream(thumbnail);
 
-    public static void viewHash() {
-        VideoConverter videoConverter = new VideoConverterByCommandLineImpl();
-        Video video = getInput();
-        System.out.println(videoConverter.createMd5(video));
-    }
+		BufferedImage bufferedImage = VideoUtils.getImageFromVideo(video);
 
-    public static void viewData() {
-        Video video = getInput();
-        Video.Attributes attributes = video.getAttributes();
-        System.out.println(attributes);
-    }
+		thumbnailOutputStream.write(ImageUtils.toByteArray(bufferedImage, ImageUtils.png));
 
-    public static void viewDataOutput() {
-        Video video = getOutput();
-        Video.Attributes attributes = video.getAttributes();
-        System.out.println(attributes);
-    }
+		return bufferedImage;
+	}
 
-    public static void viewDataOutPut() {
-        Video video = getOutput();
-        Video.Attributes attributes = video.getAttributes();
+	public static void createVideoPreview2() {
+		Video video = getInput();
+		new VideoConverterByCommandLineImpl().buildVideoPreview(video, null);
+	}
+
+	public static void viewHash() {
+		VideoConverter videoConverter = new VideoConverterByCommandLineImpl();
+		Video video = getInput();
+		System.out.println(videoConverter.createMd5(video));
+	}
+
+	public static void viewData() {
+		Video video = getInput();
+		Video.Attributes attributes = video.getAttributes();
+		System.out.println(attributes);
+	}
+
+	public static void viewDataOutput() {
+		Video video = getOutput();
+		Video.Attributes attributes = video.getAttributes();
+		System.out.println(attributes);
+	}
+
+	public static void viewDataOutPut() {
+		Video video = getOutput();
+		Video.Attributes attributes = video.getAttributes();
 //        video.removeAttribute();
-        System.out.println(attributes);
-    }
+		System.out.println(attributes);
+	}
 
-    public static void setData() {
-        Video video = getInput();
+	public static void setData() {
+		Video video = getInput();
 
-        Video.Attributes.Hash preview = Video.Attributes.Hash.builder()
-                .hashVideo("c")
-                .hashAudio("d")
-                .build();
+		Video.Attributes.Hash preview = Video.Attributes.Hash.builder()
+				.hashVideo("c")
+				.hashAudio("d")
+				.build();
 
-        Video.Attributes attributes = Video.Attributes.builder()
-                .hash(Video.Attributes.Hash.builder()
-                        .hashVideo("e")
-                        .hashAudio("b")
-                        .build()
-                )
-                .isPreview(false)
-                .hashPreview(preview)
-                .build();
+		Video.Attributes attributes = Video.Attributes.builder()
+				.hash(Video.Attributes.Hash.builder()
+						.hashVideo("e")
+						.hashAudio("b")
+						.build()
+				)
+				.isPreview(false)
+				.hashPreview(preview)
+				.build();
 
-        video.setAttributes(attributes);
-    }
+		video.setAttributes(attributes);
+	}
 
-    public static void createGif() throws IOException {
-        ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("gif").next();
+	public static void createGif() throws IOException {
+		ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("gif").next();
 
-        ImageWriteParam gifWriteParam = jpgWriter.getDefaultWriteParam();
+		ImageWriteParam gifWriteParam = jpgWriter.getDefaultWriteParam();
 
-        String path = "C:\\Users\\Hoang\\Desktop\\video\\a";
-        File thumbnail = new File(path, "thumbnail.gif");
-        FileOutputStream baos = new FileOutputStream(thumbnail);
+		String path = "C:\\Users\\Hoang\\Desktop\\video\\a";
+		File thumbnail = new File(path, "thumbnail.gif");
+		FileOutputStream baos = new FileOutputStream(thumbnail);
 
-        ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
-        jpgWriter.setOutput(ios);
+		ImageOutputStream ios = ImageIO.createImageOutputStream(baos);
+		jpgWriter.setOutput(ios);
 
-        BufferedImage bufferedImage = getPng();
-        jpgWriter.write(null, new IIOImage(bufferedImage, null, null), gifWriteParam);
+		BufferedImage bufferedImage = getPng();
+		jpgWriter.write(null, new IIOImage(bufferedImage, null, null), gifWriteParam);
 
-        baos.flush();
-    }
+		baos.flush();
+	}
 
-    public static void showAllTypeImageSupport() {
-        IIORegistry registry = IIORegistry.getDefaultInstance();
-        Iterator<ImageWriterSpi> serviceProviders = registry.getServiceProviders(ImageWriterSpi.class, false);
-        while (serviceProviders.hasNext()) {
-            ImageWriterSpi next = serviceProviders.next();
-            System.out.printf("description: %-27s   format names: %s%n",
-                    next.getDescription(Locale.ENGLISH),
-                    Arrays.toString(next.getFormatNames())
-            );
-        }
-    }
+	public static void showAllTypeImageSupport() {
+		IIORegistry registry = IIORegistry.getDefaultInstance();
+		Iterator<ImageWriterSpi> serviceProviders = registry.getServiceProviders(ImageWriterSpi.class, false);
+		while (serviceProviders.hasNext()) {
+			ImageWriterSpi next = serviceProviders.next();
+			System.out.printf("description: %-27s   format names: %s%n",
+					next.getDescription(Locale.ENGLISH),
+					Arrays.toString(next.getFormatNames())
+			);
+		}
+	}
 
 }

@@ -101,7 +101,8 @@
         <%for (int i = 0; i < folder.getFiles().size(); i++) {%>
 
         <div class="item">
-            <div onclick="viewVideo('<%=URLEncoder.encode(folder.getFiles().get(i).getPathRelative(), "UTF-8")%>')" style="cursor: pointer">
+            <div onclick="viewVideo('<%=URLEncoder.encode(folder.getFiles().get(i).getPathRelative(), "UTF-8")%>')"
+                 style="cursor: pointer">
                 <div class="video-image"
                      style="background-image: url('<%=getUrlImage(folder.getFiles().get(i))%>');">
                     <div class="video-time"><%=folder.getFiles().get(i).getLengthSecond() / 60%>
@@ -127,7 +128,8 @@
         %>
 
         <div class="item">
-            <div onclick="viewVideo('<%=URLEncoder.encode(video.getPathRelative(), "UTF-8")%>')" style="cursor: pointer">
+            <div onclick="viewVideo('<%=URLEncoder.encode(video.getPathRelative(), "UTF-8")%>')"
+                 style="cursor: pointer">
                 <div class="video-image"
                      style="background-image: url('<%=getUrlImage(video)%>');">
                     <div class="video-time"><%=video.getLengthSecond() / 60%>

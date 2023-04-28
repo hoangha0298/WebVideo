@@ -1,7 +1,10 @@
 package com.example.demo.model.response;
 
 import com.example.demo.model.DTO.Video;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -21,4 +24,5 @@ public class VideoResponse extends FileResponse {
 	private Video.Attributes attributes;
 
 	private String pathImageRelative;
+
 }

@@ -1,7 +1,7 @@
 package com.example.demo.Service;
 
-import com.example.demo.model.response.ResponseType;
 import com.example.demo.model.response.FolderResponse;
+import com.example.demo.model.response.ResponseType;
 import com.example.demo.util.FileUtils;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;

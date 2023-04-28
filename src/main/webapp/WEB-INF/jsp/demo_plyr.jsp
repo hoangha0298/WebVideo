@@ -10,6 +10,7 @@
             max-width: 800px;
             margin: 0 auto;
         }
+
         .plyr {
             border-radius: 4px;
             margin-bottom: 15px;

@@ -188,7 +188,7 @@ public class VideoConverterByCommandLineImpl extends VideoConverter {
 			process.waitFor();
 			byte[] bytes = new byte[process.getInputStream().available()];
 			process.getInputStream().read(bytes);
-			String result = new  String(bytes);
+			String result = new String(bytes);
 			System.out.println("Process execute result: " + result);
 			return result;
 		} catch (IOException | InterruptedException e) {
@@ -196,4 +196,5 @@ public class VideoConverterByCommandLineImpl extends VideoConverter {
 		}
 		return null;
 	}
+
 }

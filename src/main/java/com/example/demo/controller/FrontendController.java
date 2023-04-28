@@ -11,24 +11,24 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class FrontendController {
 
-    @Autowired
-    private FolderService folderService;
+	@Autowired
+	private FolderService folderService;
 
-    @RequestMapping("/video")
-    public String video() {
-        return "video";
-    }
+	@RequestMapping("/video")
+	public String video() {
+		return "video";
+	}
 
-    @RequestMapping("/videos")
-    public String videos(HttpServletRequest request) {
-        FolderResponse folder = folderService.getTreeFolderVideo("");
-        request.setAttribute("folderDTO", folder);
-        return "videos";
-    }
+	@RequestMapping("/videos")
+	public String videos(HttpServletRequest request) {
+		FolderResponse folder = folderService.getTreeFolderVideo("");
+		request.setAttribute("folderDTO", folder);
+		return "videos";
+	}
 
-    @RequestMapping("/demo_plyr")
-    public String demoPlyr() {
-        return "demo_plyr";
-    }
+	@RequestMapping("/demo_plyr")
+	public String demoPlyr() {
+		return "demo_plyr";
+	}
 
 }
