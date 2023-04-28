@@ -1,7 +1,9 @@
 ## Hướng dẫn cài đặt lần đầu chạy project:
 
-1. Copy 2 file codeStyleConfig.xml và Project.xml vào thư mục .idea\codeStyles.
-2. Tải ffmpeg https://ffmpeg.org/download.html và cài đặt (có phiên bản riêng cho linux và windows).
+1. Cài Java 8.
+2. Cài intellij(tốt nhất) hoặc eclipse.
+3. Copy 2 file codeStyleConfig.xml và Project.xml vào thư mục .idea\codeStyles.
+4. Tải ffmpeg https://ffmpeg.org/download.html và cài đặt (có phiên bản riêng cho linux và windows).
 
 ## Các Tài nguyên của dự án
 
