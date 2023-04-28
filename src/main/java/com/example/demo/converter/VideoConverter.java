@@ -12,6 +12,6 @@ public abstract class VideoConverter {
 
 	public abstract double getDuration(Video video);
 
-	public abstract Video.Attributes createMd5(Video video);
+	public abstract Video.Attributes.Hash createMd5(Video video);
 
 }

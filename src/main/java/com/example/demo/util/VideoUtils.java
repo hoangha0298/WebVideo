@@ -1,6 +1,7 @@
 package com.example.demo.util;
 
 import com.example.demo.model.DTO.Video;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.*;
 
@@ -15,8 +16,12 @@ public class VideoUtils {
 
 	public final static Set<String> TYPES_VIDEO_SUPPORT = CollectionUtils.asSet("mp4");
 
-	public static Video.Attributes getAttributesFromFile(Video video) {
-		return FileUtils.getAttribute(video, NAME_FIELD_SAVE_INFO_CUSTOM);
+	public static Video.Attributes getAttributesFromFile(Video video) throws IOException {
+		return FileUtils.getAttribute(video, NAME_FIELD_SAVE_INFO_CUSTOM, new TypeReference<Video.Attributes>() {});
+	}
+
+	public static boolean removeAttributesFromFile(Video video) {
+		return setAttributesToFile(video, null);
 	}
 
 	public static boolean setAttributesToFile(Video video, Video.Attributes attributes) {

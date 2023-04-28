@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.converter.VideoConverter;
 import com.example.demo.converter.VideoConverterByCommandLineImpl;
 import com.example.demo.model.DTO.Video;
 import com.example.demo.util.ImageUtils;
@@ -29,11 +30,41 @@ public class Test {
 
 //        showAllTypeImageSupport();
 
-//        subVideo();
+        createVideoPreview2();
 
-//        createVideoPreview2();
+//        setData();
 
         viewData();
+
+        viewDataOutPut();
+
+//        viewDataOutPut();
+
+//        viewHash();
+    }
+
+    private static Video getInput() {
+        Video result;
+
+//        String path = "C:\\Users\\Admin\\Desktop\\video\\natura Switzerland";
+//        result = new Video(path, "Switzerland.mp4");
+
+        String path = "C:\\Users\\Hoang\\Desktop\\video\\a b c ne";
+        result = new Video(path, "Switzerland.mp4");
+
+        return result;
+    }
+
+    private static Video getOutput() {
+        Video result;
+
+//        String path = "C:\\Users\\Admin\\Desktop\\video\\natura Switzerland";
+//        result = new Video(path, "Switzerland.mp4");
+
+        String path = "C:\\Users\\Hoang\\Desktop\\video\\a b c ne";
+        result = new Video(path, "Switzerland_preview.mp4");
+
+        return result;
     }
 
     public static BufferedImage getPng() throws IOException {
@@ -52,19 +83,54 @@ public class Test {
     }
 
     public static void createVideoPreview2() {
-        String path = "C:\\Users\\Hoang\\Desktop\\video\\a b c ne";
-
-        Video video = new Video(path, "Switzerland.mp4");
-
+        Video video = getInput();
         new VideoConverterByCommandLineImpl().buildVideoPreview(video, null);
     }
 
+    public static void viewHash() {
+        VideoConverter videoConverter = new VideoConverterByCommandLineImpl();
+        Video video = getInput();
+        System.out.println(videoConverter.createMd5(video));
+    }
+
     public static void viewData() {
-        String path = "C:\\Users\\Hoang\\Desktop\\video\\a b c ne";
+        Video video = getInput();
+        Video.Attributes attributes = video.getAttributes();
+        System.out.println(attributes);
+    }
 
-        Video video = new Video(path, "Switzerland.mp4");
+    public static void viewDataOutput() {
+        Video video = getOutput();
+        Video.Attributes attributes = video.getAttributes();
+        System.out.println(attributes);
+    }
 
-        System.out.println(video.getAttributes());
+    public static void viewDataOutPut() {
+        Video video = getOutput();
+        Video.Attributes attributes = video.getAttributes();
+//        video.removeAttribute();
+        System.out.println(attributes);
+    }
+
+    public static void setData() {
+        Video video = getInput();
+
+        Video.Attributes.Hash preview = Video.Attributes.Hash.builder()
+                .hashVideo("c")
+                .hashAudio("d")
+                .build();
+
+        Video.Attributes attributes = Video.Attributes.builder()
+                .hash(Video.Attributes.Hash.builder()
+                        .hashVideo("e")
+                        .hashAudio("b")
+                        .build()
+                )
+                .isPreview(false)
+                .hashPreview(preview)
+                .build();
+
+        video.setAttributes(attributes);
     }
 
     public static void createGif() throws IOException {

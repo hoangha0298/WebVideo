@@ -1,7 +1,8 @@
-<%@ page import="com.example.demo.Model.DTO.FolderDTO" %>
-<%@ page import="com.example.demo.Model.DTO.VideoDTO" %>
+<%@ page import="com.example.demo.model.response.FolderResponse" %>
+<%@ page import="com.example.demo.model.response.VideoResponse" %>
 <%@ page import="java.net.URLEncoder" %>
 <%@ page import="java.io.UnsupportedEncodingException" %>
+<%@ page import="com.example.demo.model.response.FolderResponse" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,31 +86,31 @@
 <body style="background-color: #202124">
 
 <%!
-    String getUrlImage(VideoDTO videoDTO) throws UnsupportedEncodingException {
-        return "/video_service/image?pathRelative=" + URLEncoder.encode(videoDTO.getPathRelative(), "UTF-8");
+    String getUrlImage(VideoResponse videoResponse) throws UnsupportedEncodingException {
+        return "/video_service/image?pathRelative=" + URLEncoder.encode(videoResponse.getPathRelative(), "UTF-8");
     }
 %>
 
 <%
-    FolderDTO folder = (FolderDTO) request.getAttribute("folderDTO");
+    FolderResponse folder = (FolderResponse) request.getAttribute("folderResponse");
 %>
 
 <div class="container">
     <div class="row">
 
-        <%for (int i = 0; i < folder.getVideos().size(); i++) {%>
+        <%for (int i = 0; i < folder.getFiles().size(); i++) {%>
 
         <div class="item">
-            <div onclick="viewVideo('<%=URLEncoder.encode(folder.getVideos().get(i).getPathRelative(), "UTF-8")%>')" style="cursor: pointer">
+            <div onclick="viewVideo('<%=URLEncoder.encode(folder.getFiles().get(i).getPathRelative(), "UTF-8")%>')" style="cursor: pointer">
                 <div class="video-image"
-                     style="background-image: url('<%=getUrlImage(folder.getVideos().get(i))%>');">
-                    <div class="video-time"><%=folder.getVideos().get(i).getLengthSecond() / 60%>
-                        :<%=folder.getVideos().get(i).getLengthSecond() % 60%>
+                     style="background-image: url('<%=getUrlImage(folder.getFiles().get(i))%>');">
+                    <div class="video-time"><%=folder.getFiles().get(i).getLengthSecond() / 60%>
+                        :<%=folder.getFiles().get(i).getLengthSecond() % 60%>
                     </div>
                 </div>
             </div>
             <div class="video-information">
-                <h3 class="name-video"><%=folder.getVideos().get(i).getPathRelative()%>
+                <h3 class="name-video"><%=folder.getFiles().get(i).getPathRelative()%>
                 </h3>
             </div>
         </div>
@@ -120,9 +121,9 @@
 
         <%
             for (int j = 0; j < folder.getSubFolders().size(); j++) {
-                FolderDTO folderSub = folder.getSubFolders().get(j);
-                for (int i = 0; i < folderSub.getVideos().size(); i++) {
-                    VideoDTO video = folderSub.getVideos().get(i);
+                FolderResponse folderSub = folder.getSubFolders().get(j);
+                for (int i = 0; i < folderSub.getFiles().size(); i++) {
+                    VideoResponse video = folderSub.getFiles().get(i);
         %>
 
         <div class="item">

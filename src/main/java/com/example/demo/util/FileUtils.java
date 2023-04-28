@@ -4,6 +4,10 @@ import com.example.demo.model.DTO.Video;
 import com.example.demo.model.response.FileResponse;
 import com.example.demo.model.response.FolderResponse;
 import com.example.demo.model.response.VideoResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.SerializationUtils;
 
 import java.io.*;
@@ -11,6 +15,9 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class FileUtils {
+
+	public static ObjectMapper objectMapper = new ObjectMapper();
+
 	public static InputStream getInputStream(String path, Long begin, Long length) throws IOException {
 		File file = new File(path);
 		return getInputStream(file, begin, length);
@@ -98,7 +105,7 @@ public class FileUtils {
 
 	public static <T> boolean setAttribute(File file, String attributeName, T attributeValue) {
 		try {
-			Files.setAttribute(file.toPath(), attributeName, SerializationUtils.serialize(attributeValue));
+			Files.setAttribute(file.toPath(), attributeName, objectMapper.writeValueAsBytes(attributeValue));
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -106,18 +113,22 @@ public class FileUtils {
 		return false;
 	}
 
-	public static <T> T getAttribute (File file, String attributeName) {
+	public static <T> T getAttribute (File file, String attributeName, TypeReference<T> typeReference) throws IOException {
+		byte[] bytes = (byte[]) Files.getAttribute(file.toPath(), attributeName);
+		if (!ArrayUtils.isEmpty(bytes)) {
+			return objectMapper.readValue(bytes, typeReference);
+		} else {
+			return null;
+		}
+	}
+
+	public static boolean createNewFile(File file) {
 		try {
-			byte[] bytes = (byte[]) Files.getAttribute(file.toPath(), attributeName);
-			if (bytes != null && bytes.length != 0) {
-				return (T) SerializationUtils.deserialize(bytes);
-			} else {
-				return null;
-			}
-		} catch (Exception e) {
+			return file.createNewFile();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return false;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.example.demo.converter;
 
 import com.example.demo.model.DTO.Video;
+import com.example.demo.util.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,11 +18,12 @@ public class VideoConverterByCommandLineImpl extends VideoConverter {
 
 		String inputFilePath = video.getAbsolutePath();
 		String outputFilePath;
-		if (outputPreview != null) {
+		if (outputPreview != null && outputPreview.exists() && outputPreview.isFile()) {
 			outputFilePath = outputPreview.getPath();
 		} else {
 			outputFilePath = inputFilePath.substring(0, inputFilePath.lastIndexOf(".")) + "_preview.mp4";
 			outputPreview = new File(outputFilePath);
+			FileUtils.createNewFile(outputPreview);
 		}
 
 		int resolution = getMaxResolution(video);
@@ -39,8 +41,8 @@ public class VideoConverterByCommandLineImpl extends VideoConverter {
 		// Cắt video và nối lại
 		StringBuilder trims = new StringBuilder();
 		StringBuilder concat = new StringBuilder();
-		double cutDuration = 0.005 * duration;
-		double skipDuration = 0.05 * duration;
+		double cutDuration = 0.01 * duration;
+		double skipDuration = 0.1 * duration;
 		int segment = 1;
 		while (begin <= duration) {
 			// Cắt video
@@ -58,7 +60,7 @@ public class VideoConverterByCommandLineImpl extends VideoConverter {
 
 		String filterComplex = String.valueOf(trims) + concat;
 
-		String command = String.format("ffmpeg -threads %s -i \"%s\" -filter_complex \"%s\" -map \"[v]\" -y %s", 4, inputFilePath, filterComplex, outputFilePath);
+		String command = String.format("ffmpeg -i \"%s\" -filter_complex \"%s\" -map \"[v]\" -y \"%s\"", inputFilePath, filterComplex, outputFilePath);
 		command = command.replaceAll(" +", " ");
 
 		// Thực thi lệnh
@@ -87,6 +89,7 @@ public class VideoConverterByCommandLineImpl extends VideoConverter {
 
 			resetInfoCustomForVideoSourceAndPreview(video, new Video(outputPreview));
 
+			Thread.sleep(500);
 			return new Video(outputFilePath);
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
@@ -97,16 +100,17 @@ public class VideoConverterByCommandLineImpl extends VideoConverter {
 
 	// trả về số lượng file set thành công thuộc tính. Nhỏ nhất là 0 lớn nhất là 2
 	private int resetInfoCustomForVideoSourceAndPreview(Video source, Video preview) {
-		Video.Attributes sourceAttributes = createMd5(source);
-		sourceAttributes.setPreview(false);
-		sourceAttributes.setPath(source.getAbsolutePath());
+		Video.Attributes sourceAttributes = Video.Attributes.builder()
+				.hash(createMd5(source))
+				.isPreview(false)
+				.build();
 
-		Video.Attributes previewAttributes = createMd5(preview);
-		previewAttributes.setPreview(true);
-		previewAttributes.setPath(preview.getAbsolutePath());
+		Video.Attributes previewAttributes = Video.Attributes.builder()
+				.hash(createMd5(preview))
+				.isPreview(true)
+				.build();
 
-		sourceAttributes.setVideoPreview(previewAttributes);
-		previewAttributes.setVideoSource(sourceAttributes);
+		sourceAttributes.setHashPreview(previewAttributes.getHash());
 
 		int numberOfSuccess = 0;
 		numberOfSuccess += source.setAttributes(sourceAttributes) ? 1 : 0;
@@ -147,25 +151,26 @@ public class VideoConverterByCommandLineImpl extends VideoConverter {
 	}
 
 	@Override
-	public Video.Attributes createMd5(Video video) {
+	public Video.Attributes.Hash createMd5(Video video) {
 		String command = String.format("ffmpeg -i \"%s\" -v error -map 0 -c copy -f streamhash -hash md5 -", video.getAbsolutePath());
 		String result = processExecuteReturnString(command);
 		if (result == null) {
 			return null;
 		}
 
-		Video.Attributes attributes = new Video.Attributes();
+		Video.Attributes.Hash hash = new Video.Attributes.Hash();
+
 		String[] md5Arr = result.split("\n");
 		if (md5Arr.length == 1) {
-			attributes.setHashVideo(md5Arr[0].replace("0,v,MD5=", ""));
+			hash.setHashVideo(md5Arr[0].replace("0,v,MD5=", ""));
 		} else if (md5Arr.length == 2) {
-			attributes.setHashVideo(md5Arr[0].replace("0,v,MD5=", ""));
-			attributes.setHashAudio(md5Arr[0].replace("1,a,MD5=", ""));
+			hash.setHashVideo(md5Arr[0].replace("0,v,MD5=", ""));
+			hash.setHashAudio(md5Arr[1].replace("1,a,MD5=", ""));
 		} else {
 			return null;
 		}
 
-		return attributes;
+		return hash;
 	}
 
 	public Double processExecuteReturnDouble(String command) {

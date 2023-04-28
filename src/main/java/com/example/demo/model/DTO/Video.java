@@ -5,66 +5,82 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.File;
-import java.io.Serializable;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
 public class Video extends File {
 
+	public static class VideoPool {
+
+		private static VideoPool videoPool;
+
+		public static VideoPool getInstance() {
+			if (videoPool == null) {
+				videoPool = new VideoPool();
+			}
+			return videoPool;
+		}
+
+		private Map<Attributes.Hash, Video> pool = new HashMap<>();
+
+		private VideoPool() {
+		}
+
+		protected boolean addThenUpdatePreview(Video video) {
+			if (video == null) {
+				return false;
+			}
+
+			Attributes attributes = video.getAttributes();
+
+			if (attributes == null || attributes.hash == null) {
+				return false;
+			}
+
+			video.preview = pool.get(attributes.hashPreview);
+			pool.put(attributes.hash, video);
+			return true;
+		}
+
+	}
+
 	@Data
 	@SuperBuilder
 	@NoArgsConstructor
-	public static class Attributes implements Serializable {
+//	@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "hash")
+	public static class Attributes {
 
-		private static final long serialVersionUID = 0L;
+		@Data
+		@SuperBuilder
+		@NoArgsConstructor
+		public static class Hash {
+			private String hashVideo;
+			private String hashAudio;
+		}
 
-		private String hashVideo;
+		private Hash hash;
 
-		private String hashAudio;
-
-		private String path;
+		private Hash hashPreview;
 
 		private boolean isPreview = false;
-
-		// child
-		private Attributes videoPreview;
-
-		// parent
-		private Attributes videoSource;
-
-		@Override
-		public String toString() {
-			return toString(1);
-		}
-
-		public String toString(int level) {
-			String videoPreviewStr = null;
-			if (level == 1 && videoPreview != null) {
-				videoPreviewStr = videoPreview.toString(level+1);
-			}
-
-			String videoSourceStr = null;
-			if (level == 1 && videoSource != null) {
-				videoSourceStr = videoSource.toString(level+1);
-			}
-
-			return  "Attributes{" +
-					"hashVideo='" + hashVideo + '\'' +
-					", hashAudio='" + hashAudio + '\'' +
-					", path='" + path + '\'' +
-					", isPreview=" + isPreview +
-					", videoPreview=" + videoPreviewStr +
-					", videoSource=" + videoSourceStr +
-					'}';
-		}
 	}
 
 	// attribute để ghi vào file
-	private Attributes attributes;
+//	private Attributes attributes;
+
+	private Video preview;
 
 	private void init() {
-		attributes = VideoUtils.getAttributesFromFile(this);
+		getAttributes();
+		VideoPool.getInstance().addThenUpdatePreview(this);
+	}
+
+	public boolean removeAttribute() {
+//        this.attributes = null;
+		return VideoUtils.removeAttributesFromFile(this);
 	}
 
 	private void validateInit() {
@@ -108,9 +124,20 @@ public class Video extends File {
 
 	public boolean setAttributes(Attributes attributes) {
 		if (VideoUtils.setAttributesToFile(this, attributes)) {
-			this.attributes = attributes;
+//			this.attributes = attributes;
 			return true;
 		}
 		return false;
+	}
+
+	public Attributes getAttributes() {
+		try {
+//			attributes = VideoUtils.getAttributesFromFile(this);
+			return VideoUtils.getAttributesFromFile(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+			removeAttribute();
+		}
+		return null;
 	}
 }
